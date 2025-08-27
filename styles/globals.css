@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+}
+
+html, body { height: 100%; }
+body { @apply bg-ink-950 text-ink-50 antialiased; }
+
+a { @apply underline underline-offset-4 text-mint; }
+a:hover { @apply opacity-90; }
+
+.container-narrow { @apply mx-auto max-w-3xl; }
+.container-wide   { @apply mx-auto max-w-6xl; }
+
+.focus-ring { @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-mint; }
