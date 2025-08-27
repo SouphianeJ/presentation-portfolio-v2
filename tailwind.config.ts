@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
@@ -28,6 +29,6 @@ const config: Config = {
       container: { center: true, padding: "1rem" }
     }
   },
-  plugins: []
+  plugins: [animate]
 };
 export default config;
