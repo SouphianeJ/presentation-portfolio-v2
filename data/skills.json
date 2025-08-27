@@ -1,7 +1,0 @@
-[
-  { "name": "xAPI & LRS", "level": 4, "proof": "Tracking complet sur 3 modules", "next": "Corrélation L3-L4" },
-  { "name": "Next.js", "level": 4, "proof": "Portail onboarding; LCP <2s", "next": "RUM + A/B à l’échelle" },
-  { "name": "Storyline", "level": 3, "proof": "6 micro-modules, variables", "next": "Adaptatif + xAPI custom" },
-  { "name": "Scrum", "level": 4, "proof": "Sprints 1–2 sem., DoD", "next": "Metrics flow/lead-time" },
-  { "name": "Accessibilité", "level": 3, "proof": "WCAG AA de base", "next": "Audit complet + tooling" }
-]
