@@ -11,7 +11,7 @@ export default function HomePage() {
       {/* Hero */}
       <section aria-labelledby="hero-title" className="mt-6">
         <h1 id="hero-title" className="text-3xl font-semibold">
-          Ingénieur Péda X Tech — De l'analyse du besoin au déploiement.
+          Ingénieur Péda X Tech — De l’analyse du besoin au déploiement.
         </h1>
         <p className="mt-2 text-ink-200">Ex : -30 à -40% time-to-competency sur 3 cohortes, suivi xAPI.</p>
         <div className="mt-4 flex gap-3">
