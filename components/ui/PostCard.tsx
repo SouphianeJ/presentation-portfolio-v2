@@ -4,7 +4,7 @@ import type { PostItem } from "@/lib/types";
 
 export default function PostCard({ post }: { post: PostItem }) {
   return (
-    <Card>
+    <Card className="card">
       <div className="text-sm">
         {post.type === "curation" ? "Curation" : "Article"} — {" "}
         <Link href={post.url} className="text-mustard underline">

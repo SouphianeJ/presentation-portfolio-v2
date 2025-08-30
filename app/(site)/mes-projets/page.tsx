@@ -23,13 +23,17 @@ function MesProjetsContent() {
   const tags = Array.from(new Set(projects.flatMap((p) => p.tags)));
   const filtered = tag ? projects.filter((p) => p.tags.includes(tag)) : projects;
 
+  const Empty = () => (
+    <Card className="card"><p className="text-sm text-ink-300">Aucun projet pour ce filtre. Change de tag.</p></Card>
+  );
+
   return (
     <div className="container-narrow">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Mes projets</h1>
+        <h1 className="title text-3xl">Mes projets</h1>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost">Filtres</Button>
+            <Button className="btn btn-ghost">Filtres</Button>
           </SheetTrigger>
           <SheetContent side="right" className="bg-ink-900 text-ink-50 border-ink-700">
             <SheetHeader><SheetTitle>Filtres</SheetTitle></SheetHeader>
@@ -44,12 +48,14 @@ function MesProjetsContent() {
         <FilterChips tags={tags} />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {filtered.map((p) => (<ProjectCard key={p.slug} p={p} />))}
-      </div>
+      {filtered.length === 0 ? <Empty /> : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {filtered.map((p) => (<ProjectCard key={p.slug} p={p} />))}
+        </div>
+      )}
 
       <div className="mt-6">
-        <Card>
+        <Card className="card">
           <p className="text-sm">
             Tu veux voir le formulaire projet ? <Link className="text-mustard underline" href="/methodo">Méthodo →</Link>
           </p>

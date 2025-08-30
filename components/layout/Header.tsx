@@ -44,7 +44,7 @@ export default function Header() {
                 </p>
               </div>
               <div className="mt-4">
-                <Button onClick={() => setOpen(false)}>Fermer</Button>
+                <Button onClick={() => setOpen(false)} className="btn btn-primary">Fermer</Button>
               </div>
             </DialogContent>
           </Dialog>
