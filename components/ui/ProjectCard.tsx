@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 
 export default function ProjectCard({ p }: { p: Project }) {
   return (
-    <Card>
+    <Card className="card">
       <div className="flex items-start justify-between">
         <h3 className="text-lg font-semibold">{p.title}</h3>
         {p.metric && <span className="text-xs text-mint">{p.metric}</span>}
@@ -30,7 +30,7 @@ export default function ProjectCard({ p }: { p: Project }) {
           ))}
         </TooltipProvider>
       </div>
-      <div className="mt-4 flex items-center gap-4">
+      <div className="mt-4 flex items-center gap-2">
         <Link className="text-mustard underline underline-offset-4" href={`/projet/${p.slug}`}>
           Étude de cas
         </Link>

@@ -26,6 +26,10 @@ const config: Config = {
       borderRadius: {
         pill: "999px"
       },
+      fontFamily: {
+        sans: ["var(--font-inter)", "ui-sans-serif", "system-ui"],
+        display: ["var(--font-bebas)", "Impact", "sans-serif"]
+      },
       container: { center: true, padding: "1rem" }
     }
   },
