@@ -76,7 +76,11 @@ export function update(prev: GameState, dtMs: number, inputs: InputEvent[]): Gam
   let lost = 0;
   for (const w of s.words) {
     if (w.y > GAME_HEIGHT + 16) {
-      lost++;
+      // Only penalize the player when a "good" word is missed.
+      if (w.kind === "good") {
+        lost++;
+      }
+      // In all cases, drop the word once it exits the screen.
     } else {
       kept.push(w);
     }
