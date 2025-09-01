@@ -13,18 +13,18 @@ import {
 import type { GameState, InputEvent, WordEntity } from "./types";
 export type { GameState, InputEvent } from "./types";
 
-// Séquence "bonne" (dans l'ordre)
-const DEFAULT_SEQUENCE = ["rouge", "vert", "bleu"];
+// Séquences possibles (dans l'ordre attendu)
+const SEQUENCES = [
+  ["rouge", "vert", "bleu"],
+  ["rose", "jaune", "vert"],
+  ["gris", "bleu", "violet"],
+];
 // Mots "faux" (distracteurs)
 const BAD_WORDS = [
-  "jaune",
   "noir",
   "blanc",
   "orange",
   "marron",
-  "rose",
-  "violet",
-  "gris",
   "cyan",
   "magenta",
   "sable",
@@ -35,6 +35,8 @@ let _id = 0;
 const newId = () => String(++_id);
 
 export function createInitialState(): GameState {
+  const sequences = shuffleArray(SEQUENCES);
+  const [first, ...rest] = sequences;
   return {
     timeMs: 0,
     score: 0,
@@ -43,7 +45,8 @@ export function createInitialState(): GameState {
     buffer: "",
     status: "running",
     seqIndex: 0,
-    targetSequence: [...DEFAULT_SEQUENCE],
+    targetSequence: first,
+    sequenceQueue: rest,
     lastSpawnMs: 0,
     nextSpawnJitter: randInRange(-SPAWN_JITTER_MS, SPAWN_JITTER_MS),
   };
@@ -74,10 +77,11 @@ export function update(prev: GameState, dtMs: number, inputs: InputEvent[]): Gam
   // Sortie d'écran ⇒ vie perdue
   const kept: WordEntity[] = [];
   let lost = 0;
+  const nextExpected = s.targetSequence[s.seqIndex];
   for (const w of s.words) {
     if (w.y > GAME_HEIGHT + 16) {
-      // Only penalize the player when a "good" word is missed.
-      if (w.kind === "good") {
+      // Penalize only when the missed word was the next expected one.
+      if (w.kind === "good" && w.text === nextExpected) {
         lost++;
       }
       // In all cases, drop the word once it exits the screen.
@@ -131,8 +135,11 @@ function tryMatchByText(state: GameState, text: string): GameState {
   if (candidate.kind === "good" && candidate.text === next) {
     // bon mot dans l'ordre
     s.score += POINTS_PER_STEP;
-    s.seqIndex = (s.seqIndex + 1) % s.targetSequence.length;
+    s.seqIndex += 1;
     s.words = s.words.filter((w) => w.id !== candidate.id);
+    if (s.seqIndex >= s.targetSequence.length) {
+      return advanceSequence(s);
+    }
     return s;
   } else {
     // mauvais (faux ou bon mais hors ordre) ⇒ vie --
@@ -150,12 +157,27 @@ function tryMatchByPointer(state: GameState, id: string): GameState {
   const next = s.targetSequence[s.seqIndex];
   if (target.kind === "good" && target.text === next) {
     s.score += POINTS_PER_STEP;
-    s.seqIndex = (s.seqIndex + 1) % s.targetSequence.length;
+    s.seqIndex += 1;
     s.words = s.words.filter((w) => w.id !== id);
+    if (s.seqIndex >= s.targetSequence.length) {
+      return advanceSequence(s);
+    }
   } else {
     s.lives = Math.max(0, s.lives - 1);
     s.words = s.words.filter((w) => w.id !== id);
   }
+  return s;
+}
+
+function advanceSequence(state: GameState): GameState {
+  const s = { ...state };
+  if (s.sequenceQueue.length === 0) {
+    s.sequenceQueue = shuffleArray(SEQUENCES);
+  }
+  const [next, ...rest] = s.sequenceQueue;
+  s.targetSequence = next;
+  s.sequenceQueue = rest;
+  s.seqIndex = 0;
   return s;
 }
 
@@ -217,4 +239,13 @@ function randInRange(min: number, max: number) {
 
 function clamp(v: number, a: number, b: number) {
   return Math.max(a, Math.min(b, v));
+}
+
+function shuffleArray<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = (Math.random() * (i + 1)) | 0;
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
