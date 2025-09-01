@@ -26,6 +26,11 @@ export default function GameCanvas() {
   const inputsRef = useRef<InputEvent[]>([]);
   const [hud, setHud] = useState<HUDSnapshot>(() => snapshot(stateRef.current));
 
+  const handleRestart = () => {
+    stateRef.current = tryReset(stateRef.current);
+    setHud(snapshot(stateRef.current));
+  };
+
   // DPR scaling & resize
   useEffect(() => {
     const canvas = canvasRef.current!;
@@ -66,10 +71,6 @@ export default function GameCanvas() {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const s = stateRef.current;
-      if (s.status === "over" && (e.key === "r" || e.key === "R")) {
-        stateRef.current = tryReset(s);
-        return;
-      }
       if (s.status === "over") return;
       if (e.key === "Backspace") {
         inputsRef.current.push({ kind: "backspace" });
@@ -151,18 +152,14 @@ export default function GameCanvas() {
       // Update HUD every frame (cheap)
       setHud(snapshot(stateRef.current));
 
-      if (stateRef.current.status !== "over") {
-        raf = requestAnimationFrame(tick);
-      } else {
-        // Draw final frame with "Game Over" already rendered by drawScene
-      }
+      raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, []);
 
   return (
-    <div>
+    <div style={{ position: "relative", display: "inline-block" }}>
       <canvas
         ref={canvasRef}
         style={{
@@ -173,6 +170,43 @@ export default function GameCanvas() {
           boxShadow: "0 10px 30px rgba(0,0,0,.4)",
         }}
       />
+      {hud.status === "over" && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(0,0,0,0.55)",
+            borderRadius: 12,
+          }}
+        >
+          <div style={{ textAlign: "center" }}>
+            <div style={{ marginBottom: 12, fontSize: 24, fontWeight: 600, color: "#ffd700" }}>
+              Game Over
+            </div>
+            <button
+              onClick={handleRestart}
+              style={{
+                padding: "8px 16px",
+                fontSize: 16,
+                fontWeight: 600,
+                background: "#ffd700",
+                color: "#000",
+                border: "none",
+                borderRadius: 8,
+                cursor: "pointer",
+              }}
+            >
+              Recommencer
+            </button>
+          </div>
+        </div>
+      )}
       <div style={{ marginTop: 8, fontSize: 14, opacity: 0.85 }}>
         <b>Score:</b> {hud.score} &nbsp;•&nbsp; <b>Vies:</b> {hud.lives} &nbsp;•&nbsp;{" "}
         <b>Buffer:</b> “{hud.buffer}”
@@ -193,11 +227,6 @@ export default function GameCanvas() {
             </span>
           ))}
         </div>
-        {hud.status === "over" && (
-          <div style={{ marginTop: 6, color: "#ffd700" }}>
-            Game Over — appuie sur <b>R</b> pour recommencer.
-          </div>
-        )}
       </div>
     </div>
   );

@@ -20,6 +20,7 @@ export interface GameState {
   status: GameStatus;
   seqIndex: number; // index dans targetSequence (mot attendu)
   targetSequence: string[];
+  sequenceQueue: string[][]; // séquences restantes à jouer
   lastSpawnMs: number;
   nextSpawnJitter: number; // ms à ajouter à l'interval
 }

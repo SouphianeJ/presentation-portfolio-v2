@@ -96,17 +96,7 @@ function drawHUD(ctx: CanvasRenderingContext2D, s: GameState, view: { width: num
     }
     x += w + 16;
   }
-  // Game over overlay
-  if (s.status === "over") {
-    ctx.fillStyle = "rgba(0,0,0,0.55)";
-    ctx.fillRect(0, 0, view.width, view.height);
-    ctx.fillStyle = "#ffd700";
-    ctx.font = "28px system-ui";
-    ctx.textBaseline = "alphabetic";
-    const msg = "Game Over — appuie sur R pour recommencer";
-    const w = ctx.measureText(msg).width;
-    ctx.fillText(msg, (view.width - w) / 2, view.height / 2);
-  }
+  // Game over overlay handled by React component
   ctx.restore();
 }
 
