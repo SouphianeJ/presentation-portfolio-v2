@@ -84,6 +84,9 @@ export default function GameCanvas() {
       // Accept single visible characters (letters incl. accents, numbers)
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
         inputsRef.current.push({ kind: "char", payload: e.key });
+        if (e.key === " ") {
+          e.preventDefault();
+        }
       }
     };
     window.addEventListener("keydown", onKeyDown);

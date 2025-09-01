@@ -10,26 +10,9 @@ import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "./config";
+import { SEQUENCES, BAD_WORDS } from "./sequences";
 import type { GameState, InputEvent, WordEntity } from "./types";
 export type { GameState, InputEvent } from "./types";
-
-// Séquences possibles (dans l'ordre attendu)
-const SEQUENCES = [
-  ["rouge", "vert", "bleu"],
-  ["rose", "jaune", "vert"],
-  ["gris", "bleu", "violet"],
-];
-// Mots "faux" (distracteurs)
-const BAD_WORDS = [
-  "noir",
-  "blanc",
-  "orange",
-  "marron",
-  "cyan",
-  "magenta",
-  "sable",
-  "olive",
-];
 
 let _id = 0;
 const newId = () => String(++_id);
