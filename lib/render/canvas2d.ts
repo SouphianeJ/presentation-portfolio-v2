@@ -42,7 +42,8 @@ export function drawScene(
 }
 
 function drawWord(ctx: CanvasRenderingContext2D, w: WordEntity, s: GameState) {
-  const isNext = w.kind === "good" && w.text === s.targetSequence[s.seqIndex];
+  const isNext =
+    w.kind === "good" && w.text === s.targetSequence[s.seqIndex].word;
   const textW = ctx.measureText(w.text).width;
   // box
   ctx.save();
@@ -85,7 +86,7 @@ function drawHUD(ctx: CanvasRenderingContext2D, s: GameState, view: { width: num
   ctx.fillText("Séquence:", x, 18);
   x += 80;
   for (let i = 0; i < s.targetSequence.length; i++) {
-    const token = s.targetSequence[i];
+    const token = s.targetSequence[i].word;
     const isNext = i === s.seqIndex;
     const w = ctx.measureText(token).width;
     ctx.fillStyle = isNext ? "#ffd700" : "#e6e7eb";

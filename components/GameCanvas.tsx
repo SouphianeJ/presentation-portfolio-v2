@@ -9,13 +9,14 @@ import {
   type InputEvent,
 } from "@/lib/game/logic";
 import { GAME_HEIGHT, GAME_WIDTH } from "@/lib/game/config";
+import type { SequenceStep } from "@/lib/game/types";
 
 type HUDSnapshot = {
   score: number;
   lives: number;
   buffer: string;
   seqIndex: number;
-  targetSequence: string[];
+  targetSequence: SequenceStep[];
   status: "running" | "over";
 };
 
@@ -217,7 +218,7 @@ export default function GameCanvas() {
           <b>Séquence:</b>{" "}
           {hud.targetSequence.map((w, i) => (
             <span
-              key={w + i}
+              key={w.word + i}
               style={{
                 padding: "2px 6px",
                 marginRight: 6,
@@ -226,7 +227,7 @@ export default function GameCanvas() {
                 border: i === hud.seqIndex ? "1px solid rgba(255,215,0,.6)" : "1px solid rgba(255,255,255,.12)",
               }}
             >
-              {w}
+              {w.word}
             </span>
           ))}
         </div>

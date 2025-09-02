@@ -10,7 +10,7 @@ import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "./config";
-import { SEQUENCES, BAD_WORDS } from "./sequences";
+import { SEQUENCES } from "./sequences";
 import type { GameState, InputEvent, WordEntity } from "./types";
 export type { GameState, InputEvent } from "./types";
 
@@ -60,7 +60,7 @@ export function update(prev: GameState, dtMs: number, inputs: InputEvent[]): Gam
   // Sortie d'écran ⇒ vie perdue
   const kept: WordEntity[] = [];
   let lost = 0;
-  const nextExpected = s.targetSequence[s.seqIndex];
+  const nextExpected = s.targetSequence[s.seqIndex].word;
   for (const w of s.words) {
     if (w.y > GAME_HEIGHT + 16) {
       // Penalize only when the missed word was the next expected one.
@@ -108,7 +108,7 @@ export function applyInputs(prev: GameState, inputs: InputEvent[]): GameState {
 function tryMatchByText(state: GameState, text: string): GameState {
   if (!text) return state;
   const s = { ...state };
-  const next = s.targetSequence[s.seqIndex];
+  const next = s.targetSequence[s.seqIndex].word;
   // On choisit le mot visible le plus proche du bas qui correspond au texte
   const candidate = [...s.words]
     .filter((w) => w.text === text)
@@ -137,7 +137,7 @@ function tryMatchByPointer(state: GameState, id: string): GameState {
   const s = { ...state };
   const target = s.words.find((w) => w.id === id);
   if (!target) return s;
-  const next = s.targetSequence[s.seqIndex];
+  const next = s.targetSequence[s.seqIndex].word;
   if (target.kind === "good" && target.text === next) {
     s.score += POINTS_PER_STEP;
     s.seqIndex += 1;
@@ -180,15 +180,18 @@ export function spawnWord(prev: GameState): GameState {
     // Biais pour faire apparaître le prochain mot attendu
     const useNext = Math.random() < NEXT_TARGET_BIAS;
     if (useNext) {
-      text = s.targetSequence[s.seqIndex];
+      text = s.targetSequence[s.seqIndex].word;
     } else {
       // autre mot de la séquence (décoy)
-      const pool = s.targetSequence.filter((_, i) => i !== s.seqIndex);
-      text = pool[(Math.random() * pool.length) | 0] ?? s.targetSequence[s.seqIndex];
+      const pool = s.targetSequence
+        .filter((_, i) => i !== s.seqIndex)
+        .map((step) => step.word);
+      text = pool[(Math.random() * pool.length) | 0] ?? s.targetSequence[s.seqIndex].word;
     }
     kind = "good";
   } else {
-    text = BAD_WORDS[(Math.random() * BAD_WORDS.length) | 0];
+    const distractors = s.targetSequence[s.seqIndex].distractors;
+    text = distractors[(Math.random() * distractors.length) | 0];
     kind = "bad";
   }
 
